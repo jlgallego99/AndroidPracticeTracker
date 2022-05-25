@@ -18,14 +18,14 @@ public class PracticaFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        PracticaViewModel practicaViewModel =
+        PracticaViewModel dashboardViewModel =
                 new ViewModelProvider(this).get(PracticaViewModel.class);
 
         binding = FragmentPracticaBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textPractica;
-        practicaViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
