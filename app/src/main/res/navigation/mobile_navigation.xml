@@ -3,18 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_practica">
-
-    <fragment
-        android:id="@+id/navigation_practica"
-        android:name="com.example.androidpracticetracker.ui.practica.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_practica" />
+    app:startDestination="@+id/navigation">
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.androidpracticetracker.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
+    <navigation android:id="@+id/navigation"
+        app:startDestination="@id/navigation_practica">
+        <fragment
+            android:id="@+id/navigation_practica"
+            android:name="com.example.androidpracticetracker.ui.practica.PracticaFragment"
+            android:label="@string/title_practica"
+            tools:layout="@layout/fragment_practica" >
+            <action
+                android:id="@+id/action_navigation_practica_to_nuevaObra"
+                app:destination="@id/nuevaObra" />
+        </fragment>
+        <fragment
+            android:id="@+id/nuevaObra"
+            android:name="com.example.androidpracticetracker.ui.practica.NuevaObra"
+            android:label="fragment_nueva_obra"
+            tools:layout="@layout/fragment_nueva_obra" />
+    </navigation>
 
 </navigation>

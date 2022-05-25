@@ -14,11 +14,6 @@
         android:theme="@style/Theme.AndroidPracticeTracker"
         tools:targetApi="31" >
         <activity
-            android:name=".ui.practica.NuevaObra"
-            android:exported="false"
-            android:label="@string/title_activity_nueva_obra"
-            android:theme="@style/Theme.AndroidPracticeTracker.NoActionBar" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name" >
