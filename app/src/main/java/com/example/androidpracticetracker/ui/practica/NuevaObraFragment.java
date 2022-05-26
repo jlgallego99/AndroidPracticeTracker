@@ -20,6 +20,10 @@ import androidx.navigation.Navigation;
 
 import com.example.androidpracticetracker.R;
 import com.example.androidpracticetracker.databinding.FragmentNuevaObraBinding;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class NuevaObraFragment extends Fragment {
@@ -68,9 +72,14 @@ public class NuevaObraFragment extends Fragment {
         botonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editorObras.putString("Autor", textAutor.getText().toString());
-                editorObras.putString("Nombre", textNombre.getText().toString());
-                editorObras.putString("Etiquetas", textEtiquetas.getText().toString());
+                Gson gson = new Gson();
+                Obra[] obras = gson.fromJson(obrasPreferences.getString("Obras", ""), Obra[].class);
+                Obra nuevaObra = new Obra(textAutor.getText().toString(), textNombre.getText().toString(), textEtiquetas.getText().toString());
+
+                obras = Arrays.copyOf(obras, obras.length + 1);
+                obras[obras.length - 1] = nuevaObra;
+
+                editorObras.putString("Obras", gson.toJson(obras));
                 editorObras.apply();
 
                 Navigation.findNavController(getView()).popBackStack();

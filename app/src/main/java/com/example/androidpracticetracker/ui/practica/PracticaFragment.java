@@ -26,9 +26,14 @@ import androidx.navigation.Navigation;
 import com.example.androidpracticetracker.R;
 import com.example.androidpracticetracker.databinding.FragmentPracticaBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import org.w3c.dom.Text;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PracticaFragment extends ListFragment {
@@ -36,6 +41,7 @@ public class PracticaFragment extends ListFragment {
     private FragmentPracticaBinding binding;
     private ArrayAdapter<String> adapter;
     ArrayList<String> listaObras = new ArrayList<String>();
+    Gson gson = new Gson();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -82,12 +88,22 @@ public class PracticaFragment extends ListFragment {
     }
 
     private void crearListaObras() {
+        listaObras = new ArrayList<>();
         SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        listaObras.add(sharedPreferences.getString("Nombre", "") + ", " +
-                sharedPreferences.getString("Autor", "") + ", " +
-                sharedPreferences.getString("Etiquetas", ""));
 
-        System.out.println(listaObras.toString());
+        try {
+            JSONObject jsonObject = new JSONObject(sharedPreferences.getString("Obras", ""));
+            String values = jsonObject.get("values").toString();
+
+            Obra[] obras = gson.fromJson(values, Obra[].class);
+
+            for (int i = 0; i < obras.length; i++) {
+                Obra o = obras[i];
+                listaObras.add(o.getNombre() + " " + o.getAutor() + " " + o.getEtiquetas());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         adapter.notifyDataSetChanged();
     }
