@@ -1,5 +1,7 @@
 package com.example.androidpracticetracker.ui.practica;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,9 @@ import com.example.androidpracticetracker.databinding.FragmentNuevaObraBinding;
 
 public class NuevaObraFragment extends Fragment {
     private FragmentNuevaObraBinding binding;
+    TextView textNombre, textAutor, textEtiquetas;
+    SharedPreferences obrasPreferences;
+    SharedPreferences.Editor editorObras;
 
     public NuevaObraFragment() {
         // Required empty public constructor
@@ -35,13 +40,14 @@ public class NuevaObraFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        obrasPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        editorObras = obrasPreferences.edit();
 
         // This callback will only be called when MyFragment is at least Started.
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
-                System.out.println("ADIOS!");
-                Navigation.findNavController(getView()).navigate(R.id.action_nuevaObra_to_navigation_practica);
+                Navigation.findNavController(getView()).popBackStack();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -55,10 +61,17 @@ public class NuevaObraFragment extends Fragment {
         View root = binding.getRoot();
 
         Button botonSubmit = root.findViewById(R.id.botonSubmit);
+        textAutor = root.findViewById(R.id.editarAutor);
+        textNombre = root.findViewById(R.id.editarNombre);
+        textEtiquetas = root.findViewById(R.id.editarEtiquetas);
+
         botonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("HOLA!");
+                editorObras.putString("Autor", textAutor.getText().toString());
+                editorObras.apply();
+
+                Navigation.findNavController(getView()).popBackStack();
             }
         });
 

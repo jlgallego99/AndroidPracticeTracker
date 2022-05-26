@@ -1,6 +1,9 @@
 package com.example.androidpracticetracker.ui.practica;
 
 import androidx.fragment.app.FragmentManager;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,14 +21,14 @@ import com.example.androidpracticetracker.R;
 import com.example.androidpracticetracker.databinding.FragmentPracticaBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.w3c.dom.Text;
+
 public class PracticaFragment extends Fragment {
 
     private FragmentPracticaBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        PracticaViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(PracticaViewModel.class);
 
         binding = FragmentPracticaBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -49,8 +52,10 @@ public class PracticaFragment extends Fragment {
             }
         });
 
-        final TextView textView = binding.textPractica;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        TextView texto = root.findViewById(R.id.text_practica);
+        texto.setText(sharedPreferences.getString("Autor", ""));
+
         return root;
     }
 
