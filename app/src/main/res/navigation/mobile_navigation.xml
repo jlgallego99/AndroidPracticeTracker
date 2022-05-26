@@ -16,9 +16,13 @@
     </fragment>
     <fragment
         android:id="@+id/nuevaObra"
-        android:name="com.example.androidpracticetracker.ui.practica.NuevaObra"
-        android:label="fragment_nueva_obra"
-        tools:layout="@layout/fragment_nueva_obra" />
+        android:name="com.example.androidpracticetracker.ui.practica.NuevaObraFragment"
+        android:label="@string/title_nueva_obra"
+        tools:layout="@layout/fragment_nueva_obra" >
+        <action
+            android:id="@+id/action_nuevaObra_to_navigation_practica"
+            app:destination="@id/navigation_practica" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.androidpracticetracker.ui.dashboard.DashboardFragment"

@@ -1,7 +1,6 @@
 package com.example.androidpracticetracker.ui.practica;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -34,18 +34,18 @@ public class PracticaFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*NuevaObraFragment fragment = new NuevaObraFragment();
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment_activity_main, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();*/
                 Navigation.findNavController(view).navigate(R.id.action_navigation_practica_to_nuevaObra);
+                // Create new fragment and transaction
+                /*FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setReorderingAllowed(true);
 
-                /*fragmentTransaction.add(R.id.fragment_nueva_obra, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragmentManager.executePendingTransactions();*/
+                // Replace whatever is in the fragment_container view with this fragment
+                transaction.replace(R.id.container, NuevaObraFragment.class, null);
+
+                // Commit the transaction
+                transaction.commit();*/
+
             }
         });
 
