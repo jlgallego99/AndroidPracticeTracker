@@ -40,12 +40,14 @@ public class PracticaFragment extends ListFragment {
 
     private FragmentPracticaBinding binding;
     private ArrayAdapter<String> adapter;
+    private SharedPreferences sharedPreferences;
     ArrayList<String> listaObras = new ArrayList<String>();
     Gson gson = new Gson();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         binding = FragmentPracticaBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -89,20 +91,12 @@ public class PracticaFragment extends ListFragment {
 
     private void crearListaObras() {
         listaObras = new ArrayList<>();
-        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-        try {
-            JSONObject jsonObject = new JSONObject(sharedPreferences.getString("Obras", ""));
-            String values = jsonObject.get("values").toString();
+        Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
 
-            Obra[] obras = gson.fromJson(values, Obra[].class);
-
-            for (int i = 0; i < obras.length; i++) {
-                Obra o = obras[i];
-                listaObras.add(o.getNombre() + " " + o.getAutor() + " " + o.getEtiquetas());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for (int i = 0; i < obras.length; i++) {
+            Obra o = obras[i];
+            listaObras.add(o.getNombre() + " " + o.getAutor() + " " + o.getEtiquetas());
         }
 
         adapter.notifyDataSetChanged();

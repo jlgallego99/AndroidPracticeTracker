@@ -75,9 +75,15 @@ public class NuevaObraFragment extends Fragment {
                 Gson gson = new Gson();
                 Obra[] obras = gson.fromJson(obrasPreferences.getString("Obras", ""), Obra[].class);
                 Obra nuevaObra = new Obra(textAutor.getText().toString(), textNombre.getText().toString(), textEtiquetas.getText().toString());
+                Log.i("HOLA", obrasPreferences.getString("Obras", ""));
 
-                obras = Arrays.copyOf(obras, obras.length + 1);
-                obras[obras.length - 1] = nuevaObra;
+                if (obras == null) {
+                    obras = new Obra[1];
+                    obras[0] = nuevaObra;
+                } else {
+                    obras = Arrays.copyOf(obras, obras.length + 1);
+                    obras[obras.length - 1] = nuevaObra;
+                }
 
                 editorObras.putString("Obras", gson.toJson(obras));
                 editorObras.apply();
