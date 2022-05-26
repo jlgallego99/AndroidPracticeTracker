@@ -1,5 +1,7 @@
 package com.example.androidpracticetracker.ui.practica;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
@@ -27,9 +29,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
 
-public class PracticaFragment extends ListFragment implements AdapterView.OnItemClickListener {
+import java.util.ArrayList;
+
+public class PracticaFragment extends ListFragment {
 
     private FragmentPracticaBinding binding;
+    private ArrayAdapter<String> adapter;
+    ArrayList<String> listaObras = new ArrayList<String>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,29 +62,34 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
             }
         });
 
-        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-
         return root;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Company, R.layout.item_lista);
+        adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_lista, listaObras);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String[] mess = getResources().getStringArray(R.array.Company);
-                Toast.makeText(getActivity(), "Item: " + mess[i], Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Item: " + listaObras.get(i), Toast.LENGTH_SHORT).show();
             }
         });
+
+        crearListaObras();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    private void crearListaObras() {
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        listaObras.add(sharedPreferences.getString("Nombre", "") + ", " +
+                sharedPreferences.getString("Autor", "") + ", " +
+                sharedPreferences.getString("Etiquetas", ""));
 
+        System.out.println(listaObras.toString());
+
+        adapter.notifyDataSetChanged();
     }
 
     @Override

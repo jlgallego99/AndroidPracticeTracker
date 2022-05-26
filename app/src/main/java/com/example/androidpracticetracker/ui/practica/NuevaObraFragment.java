@@ -69,6 +69,8 @@ public class NuevaObraFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 editorObras.putString("Autor", textAutor.getText().toString());
+                editorObras.putString("Nombre", textNombre.getText().toString());
+                editorObras.putString("Etiquetas", textEtiquetas.getText().toString());
                 editorObras.apply();
 
                 Navigation.findNavController(getView()).popBackStack();

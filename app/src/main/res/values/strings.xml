@@ -5,14 +5,4 @@
     <string name="title_nueva_obra">Nueva Obra</string>
     <string name="fab_descripcion">Añadir pieza</string>
     <string name="submitObra">Crear</string>
-
-    <string-array name="Company">
-        <item>Evon</item>
-        <item>HCL</item>
-        <item>HP</item>
-        <item>Ericsson</item>
-        <item>TCS</item>
-        <item>Dell</item>
-        <item>Microsoft</item>
-    </string-array>
 </resources>
