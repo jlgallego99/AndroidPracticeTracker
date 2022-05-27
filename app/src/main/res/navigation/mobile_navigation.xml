@@ -18,7 +18,6 @@
             app:destination="@id/obraDetalleFragment" >
             <argument
                 android:name="obra"
-                app:argType="string"
                 android:defaultValue="Default" />
         </action>
     </fragment>
@@ -43,7 +42,7 @@
         tools:layout="@layout/fragment_obra_detalle" >
         <argument
             android:name="obra"
-            app:argType="string" />
+            app:argType="com.example.androidpracticetracker.ui.practica.Obra" />
     </fragment>
 
 </navigation>

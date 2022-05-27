@@ -33,14 +33,7 @@ public class ObraDetalleFragment extends Fragment {
         View root = binding.getRoot();
 
         texto = root.findViewById(R.id.textoObra);
-
-        //Obra o = getArguments().getParcelable("obra");
-        String o = getArguments().getString("obra");
-        if (o == null) {
-            texto.setText("Es nulo");
-        } else {
-            texto.setText(o);
-        }
+        texto.setText(getArguments().getParcelable("obra").toString());
 
         return root;
     }

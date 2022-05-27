@@ -44,17 +44,6 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.action_navigation_practica_to_nuevaObra);
-                // Create new fragment and transaction
-                /*FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setReorderingAllowed(true);
-
-                // Replace whatever is in the fragment_container view with this fragment
-                transaction.replace(R.id.container, NuevaObraFragment.class, null);
-
-                // Commit the transaction
-                transaction.commit();*/
-
             }
         });
 
@@ -91,7 +80,7 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
         //Toast.makeText(getActivity(), "Item: " + listaObras.get(i), Toast.LENGTH_SHORT).show();
         Bundle bundle = new Bundle();
         //bundle.putParcelable("obra", obras[i]);
-        bundle.putString("obra", obras[i].getNombre());
+        bundle.putParcelable("obra", obras[i]);
         Navigation.findNavController(view).navigate(R.id.action_navigation_practica_to_obraDetalleFragment, bundle);
     }
 
