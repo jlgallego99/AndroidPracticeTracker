@@ -11,10 +11,54 @@
         android:id="@+id/textoObra"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:text="NombreObra"
+        android:textFontWeight="@integer/material_motion_duration_medium_2"
+        app:layout_constraintBottom_toTopOf="@+id/simpleChronometer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Chronometer
+        android:id="@+id/simpleChronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:drawableTop="@drawable/timer"
+        android:gravity="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/startChronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/startChronometer"
+        app:layout_constraintEnd_toStartOf="@+id/stopChronometer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/simpleChronometer" />
+
+    <Button
+        android:id="@+id/stopChronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/stopChronometer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/simpleChronometer" />
+
+    <Button
+        android:id="@+id/restartChronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/restartChronometer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/stopChronometer"
+        app:layout_constraintTop_toBottomOf="@+id/simpleChronometer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

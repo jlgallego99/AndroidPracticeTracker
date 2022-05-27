@@ -6,4 +6,8 @@
     <string name="fab_descripcion">Añadir pieza</string>
     <string name="submitObra">Crear</string>
     <string name="title_obra_detalle">Practicar Obra</string>
+    <string name="startChronometer">Iniciar</string>
+    <string name="startChronometer2">Reanudar</string>
+    <string name="stopChronometer">Parar</string>
+    <string name="restartChronometer">Reiniciar</string>
 </resources>
