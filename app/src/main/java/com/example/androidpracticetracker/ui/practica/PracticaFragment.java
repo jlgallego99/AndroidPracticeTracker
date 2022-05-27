@@ -78,8 +78,7 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
+        getListView().setOnItemClickListener(this);
     }
 
     private void crearListaObras() {
@@ -101,6 +100,7 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Log.i("HOLA", "DENTRO");
         Toast.makeText(getActivity(), "Item: " + listaObras.get(i), Toast.LENGTH_SHORT).show();
     }
 
