@@ -1,39 +1,26 @@
 package com.example.androidpracticetracker.ui.practica;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.androidpracticetracker.R;
 import com.example.androidpracticetracker.databinding.FragmentPracticaBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PracticaFragment extends ListFragment implements AdapterView.OnItemClickListener {
@@ -41,6 +28,7 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
     private FragmentPracticaBinding binding;
     private ArrayAdapter<String> adapter;
     private SharedPreferences sharedPreferences;
+    private Obra[] obras;
     ArrayList<String> listaObras = new ArrayList<String>();
     Gson gson = new Gson();
 
@@ -84,7 +72,7 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
     private void crearListaObras() {
         listaObras = new ArrayList<>();
 
-        Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
+        obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
 
         if (obras != null) {
             for (int i = 0; i < obras.length; i++) {
@@ -100,8 +88,11 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Log.i("HOLA", "DENTRO");
-        Toast.makeText(getActivity(), "Item: " + listaObras.get(i), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Item: " + listaObras.get(i), Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        //bundle.putParcelable("obra", obras[i]);
+        bundle.putString("obra", obras[i].getNombre());
+        Navigation.findNavController(view).navigate(R.id.action_navigation_practica_to_obraDetalleFragment, bundle);
     }
 
     @Override

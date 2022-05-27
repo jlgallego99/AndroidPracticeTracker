@@ -13,6 +13,14 @@
         <action
             android:id="@+id/action_navigation_practica_to_nuevaObra"
             app:destination="@id/nuevaObra" />
+        <action
+            android:id="@+id/action_navigation_practica_to_obraDetalleFragment"
+            app:destination="@id/obraDetalleFragment" >
+            <argument
+                android:name="obra"
+                app:argType="string"
+                android:defaultValue="Default" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/nuevaObra"
@@ -28,5 +36,14 @@
         android:name="com.example.androidpracticetracker.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/obraDetalleFragment"
+        android:name="com.example.androidpracticetracker.ui.practica.ObraDetalleFragment"
+        android:label="@string/title_obra_detalle"
+        tools:layout="@layout/fragment_obra_detalle" >
+        <argument
+            android:name="obra"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

@@ -5,4 +5,5 @@
     <string name="title_nueva_obra">Nueva Obra</string>
     <string name="fab_descripcion">Añadir pieza</string>
     <string name="submitObra">Crear</string>
+    <string name="title_obra_detalle">Practicar Obra</string>
 </resources>

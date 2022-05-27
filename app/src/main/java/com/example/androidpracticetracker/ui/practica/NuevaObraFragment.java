@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +14,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.androidpracticetracker.R;
 import com.example.androidpracticetracker.databinding.FragmentNuevaObraBinding;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-
 
 public class NuevaObraFragment extends Fragment {
     private FragmentNuevaObraBinding binding;

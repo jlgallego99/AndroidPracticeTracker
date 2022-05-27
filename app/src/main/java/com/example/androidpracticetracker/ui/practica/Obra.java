@@ -1,6 +1,9 @@
 package com.example.androidpracticetracker.ui.practica;
 
-public class Obra {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Obra implements Parcelable {
     private String autor;
     private String nombre;
     private String etiquetas;
@@ -10,6 +13,24 @@ public class Obra {
         this.nombre = nombre;
         this.etiquetas = etiquetas;
     }
+
+    protected Obra(Parcel in) {
+        autor = in.readString();
+        nombre = in.readString();
+        etiquetas = in.readString();
+    }
+
+    public static final Creator<Obra> CREATOR = new Creator<Obra>() {
+        @Override
+        public Obra createFromParcel(Parcel in) {
+            return new Obra(in);
+        }
+
+        @Override
+        public Obra[] newArray(int size) {
+            return new Obra[size];
+        }
+    };
 
     public String getAutor() {
         return autor;
@@ -33,6 +54,18 @@ public class Obra {
 
     public void setEtiquetas(String etiquetas) {
         this.etiquetas = etiquetas;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(autor);
+        parcel.writeString(nombre);
+        parcel.writeString(etiquetas);
     }
 
     @Override
