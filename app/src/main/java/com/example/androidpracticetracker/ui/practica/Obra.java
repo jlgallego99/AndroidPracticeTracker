@@ -34,4 +34,9 @@ public class Obra {
     public void setEtiquetas(String etiquetas) {
         this.etiquetas = etiquetas;
     }
+
+    @Override
+    public String toString() {
+        return autor + " " + nombre + " " + etiquetas;
+    }
 }

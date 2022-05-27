@@ -36,7 +36,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class PracticaFragment extends ListFragment {
+public class PracticaFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     private FragmentPracticaBinding binding;
     private ArrayAdapter<String> adapter;
@@ -70,6 +70,8 @@ public class PracticaFragment extends ListFragment {
             }
         });
 
+        crearListaObras();
+
         return root;
     }
 
@@ -77,16 +79,7 @@ public class PracticaFragment extends ListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_lista, listaObras);
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), "Item: " + listaObras.get(i), Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        crearListaObras();
     }
 
     private void crearListaObras() {
@@ -94,12 +87,21 @@ public class PracticaFragment extends ListFragment {
 
         Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
 
-        for (int i = 0; i < obras.length; i++) {
-            Obra o = obras[i];
-            listaObras.add(o.getNombre() + " " + o.getAutor() + " " + o.getEtiquetas());
-        }
+        if (obras != null) {
+            for (int i = 0; i < obras.length; i++) {
+                Obra o = obras[i];
+                listaObras.add(o.getNombre() + " " + o.getAutor() + " " + o.getEtiquetas());
+            }
 
-        adapter.notifyDataSetChanged();
+            adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_lista, listaObras);
+            setListAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Toast.makeText(getActivity(), "Item: " + listaObras.get(i), Toast.LENGTH_SHORT).show();
     }
 
     @Override
