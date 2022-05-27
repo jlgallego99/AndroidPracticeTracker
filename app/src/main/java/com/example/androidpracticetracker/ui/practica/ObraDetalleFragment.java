@@ -23,7 +23,7 @@ public class ObraDetalleFragment extends Fragment {
     private boolean stopped;    // Indica si el cronómetro está parado o no
     private long offset;        // Tiempo que lleva parado el cronómetro
 
-    private TextView texto;
+    private TextView textoAutor, textoNombre;
     private FragmentObraDetalleBinding binding;
 
     public ObraDetalleFragment() {
@@ -98,8 +98,11 @@ public class ObraDetalleFragment extends Fragment {
             }
         });
 
-        texto = root.findViewById(R.id.textoObra);
-        texto.setText(getArguments().getParcelable("obra").toString());
+        Obra o = getArguments().getParcelable("obra");
+        textoAutor = root.findViewById(R.id.textoAutor);
+        textoNombre = root.findViewById(R.id.textoNombre);
+        textoAutor.setText(o.getAutor());
+        textoNombre.setText(o.getNombre());
 
         return root;
     }

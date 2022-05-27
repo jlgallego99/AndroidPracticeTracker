@@ -66,7 +66,7 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
         if (obras != null) {
             for (int i = 0; i < obras.length; i++) {
                 Obra o = obras[i];
-                listaObras.add(o.getNombre() + " " + o.getAutor() + " " + o.getEtiquetas());
+                listaObras.add(o.getNombre());
             }
 
             adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_lista, listaObras);

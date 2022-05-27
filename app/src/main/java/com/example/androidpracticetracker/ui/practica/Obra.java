@@ -7,17 +7,20 @@ public class Obra implements Parcelable {
     private String autor;
     private String nombre;
     private String etiquetas;
+    private float tiempoEstudiado; // Tiempo estudiado en esta obra (en segundos)
 
     public Obra(String autor, String nombre, String etiquetas) {
         this.autor = autor;
         this.nombre = nombre;
         this.etiquetas = etiquetas;
+        this.tiempoEstudiado = 0;
     }
 
     protected Obra(Parcel in) {
         autor = in.readString();
         nombre = in.readString();
         etiquetas = in.readString();
+        tiempoEstudiado = 0;
     }
 
     public static final Creator<Obra> CREATOR = new Creator<Obra>() {
@@ -56,6 +59,14 @@ public class Obra implements Parcelable {
         this.etiquetas = etiquetas;
     }
 
+    public float getTiempoEstudiado() {
+        return tiempoEstudiado;
+    }
+
+    public void setTiempoEstudiado(float tiempoEstudiado) {
+        this.tiempoEstudiado = tiempoEstudiado;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -66,10 +77,11 @@ public class Obra implements Parcelable {
         parcel.writeString(autor);
         parcel.writeString(nombre);
         parcel.writeString(etiquetas);
+        parcel.writeFloat(tiempoEstudiado);
     }
 
     @Override
     public String toString() {
-        return autor + " " + nombre + " " + etiquetas;
+        return nombre + " (" + tiempoEstudiado + " segundos)";
     }
 }
