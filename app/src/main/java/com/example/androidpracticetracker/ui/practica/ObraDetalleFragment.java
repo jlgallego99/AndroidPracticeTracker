@@ -1,5 +1,6 @@
 package com.example.androidpracticetracker.ui.practica;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -44,7 +45,6 @@ public class ObraDetalleFragment extends Fragment {
 
         Button startButton = root.findViewById(R.id.startChronometer);
         Button stopButton = root.findViewById(R.id.stopChronometer);
-        Button restartButton = root.findViewById(R.id.restartChronometer);
         simpleChronometer = root.findViewById(R.id.simpleChronometer);
 
         // Por defecto el cronómetro está parado hasta que se inicie a contar
@@ -63,8 +63,18 @@ public class ObraDetalleFragment extends Fragment {
                     // y le restamos el último tiempo medido
                     simpleChronometer.setBase(SystemClock.elapsedRealtime() - offset);
                     simpleChronometer.start();
-
                     stopped = false;
+
+                    startButton.setText(R.string.pausarCronometro);
+                    startButton.setBackgroundColor(Color.parseColor("#ffff8800"));
+                } else {
+                    // Al parar el cronómetro almacenamos el tiempo transcurrido en milisegundos
+                    offset = SystemClock.elapsedRealtime() - simpleChronometer.getBase();
+                    simpleChronometer.stop();
+                    stopped = true;
+
+                    startButton.setText(R.string.reanudarCronometro);
+                    startButton.setBackgroundColor(Color.parseColor("#ff99cc00"));
                 }
             }
         });
@@ -76,7 +86,6 @@ public class ObraDetalleFragment extends Fragment {
                     // Al parar el cronómetro almacenamos el tiempo transcurrido en milisegundos
                     offset = SystemClock.elapsedRealtime() - simpleChronometer.getBase();
                     simpleChronometer.stop();
-                    startButton.setText(R.string.startChronometer2);
 
                     stopped = true;
 
@@ -85,16 +94,16 @@ public class ObraDetalleFragment extends Fragment {
 
                     // Guardar cada tiempo medido
 
-                }
-            }
-        });
 
-        restartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                simpleChronometer.setBase(SystemClock.elapsedRealtime());
-                startButton.setText(R.string.startChronometer);
-                offset = 0;
+                    // Reiniciar cronómetro
+                    simpleChronometer.setBase(SystemClock.elapsedRealtime());
+                    offset = 0;
+
+                    startButton.setText(R.string.iniciarCronometro);
+                    startButton.setBackgroundColor(Color.parseColor("#ff669900"));
+
+                    // TODO: TOAST
+                }
             }
         });
 

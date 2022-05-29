@@ -51,8 +51,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="@string/startChronometer"
-        app:layout_constraintEnd_toStartOf="@+id/stopChronometer"
+        android:layout_marginEnd="150dp"
+        android:text="@string/iniciarCronometro"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/simpleChronometer" />
 
@@ -60,20 +62,12 @@
         android:id="@+id/stopChronometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="50dp"
         android:text="@string/stopChronometer"
+        app:backgroundTint="@android:color/holo_red_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/simpleChronometer" />
-
-    <Button
-        android:id="@+id/restartChronometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="@string/restartChronometer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/stopChronometer"
         app:layout_constraintTop_toBottomOf="@+id/simpleChronometer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
