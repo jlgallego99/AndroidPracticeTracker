@@ -20,6 +20,7 @@ import com.example.androidpracticetracker.ui.practica.Obra;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -29,6 +30,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
@@ -42,6 +44,8 @@ public class DashboardFragment extends Fragment {
     private LineChart lineChart;
     private LineData lineData;
     private LineDataSet lineDataSet;
+
+    private ArrayList<String> semanaEjeX = new ArrayList<>(Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"));
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -61,8 +65,12 @@ public class DashboardFragment extends Fragment {
 
     private void actualizarGraficas(View view) {
         Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
+        // Inicializar semana
         ArrayList datos = new ArrayList<>();
-        
+        for (int i = 1; i <= 7; i++) {
+            datos.add(new BarEntry(i, 0));
+        }
+
         if (obras != null) {
             for (int i = 0; i < obras.length; i++) {
                 if (obras[i].getTiempoEstudiado() > 0) {
@@ -70,7 +78,6 @@ public class DashboardFragment extends Fragment {
                 }
             }
         }
-
         barDataSet = new BarDataSet(datos, "Segundos estudiados");
         barData = new BarData(barDataSet);
 
@@ -79,6 +86,15 @@ public class DashboardFragment extends Fragment {
         barChart = view.findViewById(R.id.graficaSemanal);
         barChart.setDescription(desc);
         barChart.getDescription().setEnabled(true);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setGranularity(1f);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setEnabled(true);
+        xAxis.setDrawGridLines(false);
+        //String setter in x-Axis
+        barChart.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(semanaEjeX));
+
         barChart.setData(barData);
 
         barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
