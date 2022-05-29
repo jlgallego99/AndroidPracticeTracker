@@ -92,6 +92,7 @@ public class DashboardFragment extends Fragment {
         xAxis.setCenterAxisLabels(true);
         xAxis.setEnabled(true);
         xAxis.setDrawGridLines(false);
+        xAxis.setAvoidFirstLastClipping(true);
         //String setter in x-Axis
         barChart.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(semanaEjeX));
 
