@@ -1,8 +1,12 @@
 package com.example.androidpracticetracker.ui.practica;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.os.SystemClock;
@@ -12,10 +16,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.androidpracticetracker.R;
 import com.example.androidpracticetracker.databinding.FragmentObraDetalleBinding;
+import com.google.gson.Gson;
 
+import java.time.DayOfWeek;
 import java.util.Calendar;
 
 public class ObraDetalleFragment extends Fragment {
@@ -26,6 +33,9 @@ public class ObraDetalleFragment extends Fragment {
 
     private TextView textoAutor, textoNombre;
     private FragmentObraDetalleBinding binding;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editorObras;
+    private Gson gson = new Gson();
 
     public ObraDetalleFragment() {
         // Required empty public constructor
@@ -40,6 +50,8 @@ public class ObraDetalleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        editorObras = sharedPreferences.edit();
         binding = FragmentObraDetalleBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -82,27 +94,26 @@ public class ObraDetalleFragment extends Fragment {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!stopped) {
-                    // Al parar el cronómetro almacenamos el tiempo transcurrido en milisegundos
-                    offset = SystemClock.elapsedRealtime() - simpleChronometer.getBase();
+                // Al parar el cronómetro almacenamos el tiempo transcurrido en milisegundos
+                offset = SystemClock.elapsedRealtime() - simpleChronometer.getBase();
+                if (offset/1000 > 0) {
                     simpleChronometer.stop();
-
                     stopped = true;
 
                     // Crear Calendar con el tiempo medido
                     Calendar last = Calendar.getInstance();
 
                     // Guardar cada tiempo medido
-
-
-                    // Reiniciar cronómetro
-                    simpleChronometer.setBase(SystemClock.elapsedRealtime());
-                    offset = 0;
+                    guardarTiempoEstudio(last);
 
                     startButton.setText(R.string.iniciarCronometro);
                     startButton.setBackgroundColor(Color.parseColor("#ff669900"));
 
-                    // TODO: TOAST
+                    Toast.makeText(getContext(), "Nuevo estudio: " + offset/1000 + " segundos", Toast.LENGTH_SHORT).show();
+
+                    // Reiniciar cronómetro
+                    simpleChronometer.setBase(SystemClock.elapsedRealtime());
+                    offset = 0;
                 }
             }
         });
@@ -114,5 +125,22 @@ public class ObraDetalleFragment extends Fragment {
         textoNombre.setText(o.getNombre());
 
         return root;
+    }
+
+    private void guardarTiempoEstudio(Calendar t) {
+        Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
+
+        // Actualizar el tiempo de la obra
+        if (obras != null) {
+            for (int i = 0; i < obras.length; i++) {
+                if (textoNombre.getText().equals(obras[i].getNombre())) {
+                    obras[i].addTiempoEstudiado(offset/1000);
+                    obras[i].setUltimoEstudio(t.DAY_OF_WEEK);
+                }
+            }
+
+            editorObras.putString("Obras", gson.toJson(obras));
+            editorObras.apply();
+        }
     }
 }

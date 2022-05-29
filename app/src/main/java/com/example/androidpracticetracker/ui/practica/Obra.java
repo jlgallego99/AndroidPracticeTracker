@@ -3,11 +3,14 @@ package com.example.androidpracticetracker.ui.practica;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.time.DayOfWeek;
+
 public class Obra implements Parcelable {
     private String autor;
     private String nombre;
     private String etiquetas;
     private float tiempoEstudiado; // Tiempo estudiado en esta obra (en segundos)
+    private int ultimoEstudio;  // Día de la semana en el cual se realizó el último estudio
 
     public Obra(String autor, String nombre, String etiquetas) {
         this.autor = autor;
@@ -65,6 +68,18 @@ public class Obra implements Parcelable {
 
     public void setTiempoEstudiado(float tiempoEstudiado) {
         this.tiempoEstudiado = tiempoEstudiado;
+    }
+
+    public int getUltimoEstudio() {
+        return ultimoEstudio;
+    }
+
+    public void setUltimoEstudio(int ultimoEstudio) {
+        this.ultimoEstudio = ultimoEstudio;
+    }
+
+    public void addTiempoEstudiado(float tiempo) {
+        this.tiempoEstudiado += tiempo;
     }
 
     @Override
