@@ -130,13 +130,19 @@ public class ObraDetalleFragment extends Fragment {
 
     private void guardarTiempoEstudio(Calendar t) {
         Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
+        t.setFirstDayOfWeek(Calendar.MONDAY);
 
         // Actualizar el tiempo de la obra
         if (obras != null) {
             for (int i = 0; i < obras.length; i++) {
                 if (textoNombre.getText().equals(obras[i].getNombre())) {
                     obras[i].addTiempoEstudiado(offset/1000);
-                    obras[i].setUltimoEstudio(t.DAY_OF_WEEK);
+
+                    int dia = t.get(Calendar.DAY_OF_WEEK);
+                    if (dia == 1) {
+                        dia = 7;
+                    }
+                    obras[i].setUltimoEstudio(dia);
                 }
             }
 
