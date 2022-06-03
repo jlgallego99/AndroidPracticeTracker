@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -64,6 +66,18 @@ public class ObraArrayAdapter extends ArrayAdapter<Obra> {
         Obra o = getItem(position);
         viewHolder.nombre.setText(o.getNombre());
         viewHolder.etiquetas.setText(o.getEtiquetas());
+
+        // Controlar botón ed borrar obra
+        ImageButton boton_borrar = row.findViewById(R.id.imageButton);
+        boton_borrar.setTag(position);
+        boton_borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                obras.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
         return row;
     }
 
