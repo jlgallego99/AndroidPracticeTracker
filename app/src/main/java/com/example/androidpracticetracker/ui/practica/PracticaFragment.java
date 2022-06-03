@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,13 +25,12 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-public class PracticaFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class PracticaFragment extends ListFragment {
 
     private FragmentPracticaBinding binding;
-    private ArrayAdapter<String> adapter;
+    private ObraArrayAdapter adapter;
     private SharedPreferences sharedPreferences;
     private Obra[] obras;
-    ArrayList<String> listaObras = new ArrayList<String>();
     Gson gson = new Gson();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -47,6 +48,7 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
             }
         });
 
+        adapter = new ObraArrayAdapter(root.getContext().getApplicationContext(), R.layout.item_lista);
         crearListaObras();
 
         return root;
@@ -55,33 +57,28 @@ public class PracticaFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getListView().setOnItemClickListener(this);
+
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("obra", obras[i]);
+                Navigation.findNavController(view).navigate(R.id.action_navigation_practica_to_obraDetalleFragment, bundle);
+            }
+        });
     }
 
     private void crearListaObras() {
-        listaObras = new ArrayList<>();
-
         obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
 
         if (obras != null) {
             for (int i = 0; i < obras.length; i++) {
-                Obra o = obras[i];
-                listaObras.add(o.getNombre());
+                adapter.add(obras[i]);
             }
 
-            adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_lista, listaObras);
             setListAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //Toast.makeText(getActivity(), "Item: " + listaObras.get(i), Toast.LENGTH_SHORT).show();
-        Bundle bundle = new Bundle();
-        //bundle.putParcelable("obra", obras[i]);
-        bundle.putParcelable("obra", obras[i]);
-        Navigation.findNavController(view).navigate(R.id.action_navigation_practica_to_obraDetalleFragment, bundle);
     }
 
     @Override

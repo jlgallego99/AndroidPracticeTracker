@@ -72,18 +72,6 @@ public class DashboardFragment extends Fragment {
         ArrayList datos = new ArrayList<>();
         if (obras != null) {
             // Sacar lo necesario de todas las obras estudiadas
-            /*for (int i = 0; i < 7; i++) {
-                int estudiadoDia = 0;
-
-                for (int j = 0; j < obras.length; j++) {
-                    if (obras[j].getTiempoEstudiado() > 0 && obras[j].getUltimoEstudio() == i) {
-                        estudiadoDia += obras[j].getTiempoEstudiado();
-                    }
-                }
-
-                datosObras.add(estudiadoDia);
-            }*/
-
             for (int i = 0; i < obras.length; i++) {
                 for (int j = 0; j < 7; j++) {
                     datosObras.set(j, datosObras.get(j) + obras[i].getEstudio(j));
