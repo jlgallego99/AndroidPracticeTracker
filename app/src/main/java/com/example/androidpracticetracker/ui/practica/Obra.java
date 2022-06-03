@@ -3,20 +3,24 @@ package com.example.androidpracticetracker.ui.practica;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Obra implements Parcelable {
     private String autor;
     private String nombre;
     private String etiquetas;
-    private float tiempoEstudiado; // Tiempo estudiado en esta obra (en segundos)
+    private float tiempoEstudiado; // Tiempo total estudiado en esta obra (en segundos)
     private int ultimoEstudio;  // Día de la semana en el cual se realizó el último estudio
+    private ArrayList<Integer> estudios = new ArrayList<Integer>(Collections.nCopies(7, 0));
 
     public Obra(String autor, String nombre, String etiquetas) {
         this.autor = autor;
         this.nombre = nombre;
         this.etiquetas = etiquetas;
         this.tiempoEstudiado = 0;
+        this.ultimoEstudio = 0;
+        System.out.println("CREANDO OBRA");
     }
 
     protected Obra(Parcel in) {
@@ -74,12 +78,27 @@ public class Obra implements Parcelable {
         return ultimoEstudio;
     }
 
-    public void setUltimoEstudio(int ultimoEstudio) {
+    private void setUltimoEstudio(int ultimoEstudio) {
         this.ultimoEstudio = ultimoEstudio;
     }
 
-    public void addTiempoEstudiado(float tiempo) {
+    private void addTiempoEstudiado(float tiempo) {
         this.tiempoEstudiado += tiempo;
+    }
+
+    public void addEstudio(int dia, int tiempo) {
+        // Añadir al tiempo total
+        this.addTiempoEstudiado(tiempo);
+
+        // Añadir último estudio realizado
+        this.setUltimoEstudio(dia);
+
+        // Añadir al estudio del día
+        this.estudios.set(dia, this.estudios.get(dia) + tiempo);
+    }
+
+    public int getEstudio(int dia) {
+        return this.estudios.get(dia);
     }
 
     @Override

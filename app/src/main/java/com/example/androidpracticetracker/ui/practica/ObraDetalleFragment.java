@@ -136,15 +136,13 @@ public class ObraDetalleFragment extends Fragment {
         if (obras != null) {
             for (int i = 0; i < obras.length; i++) {
                 if (textoNombre.getText().equals(obras[i].getNombre())) {
-                    obras[i].addTiempoEstudiado(offset/1000);
-
-                    int dia = t.get(Calendar.DAY_OF_WEEK);
-                    if (dia == 1) {
-                        dia = 7;
-                    } else {
-                        dia -= 1;
+                    // Transformar dia en un numero del 0 al 6
+                    int dia = t.get(Calendar.DAY_OF_WEEK) - 2;
+                    if (dia == -1) {
+                        dia = 6;
                     }
-                    obras[i].setUltimoEstudio(dia);
+
+                    obras[i].addEstudio(dia, (int) (offset/1000));
                 }
             }
 

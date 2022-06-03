@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
@@ -67,9 +68,11 @@ public class DashboardFragment extends Fragment {
         Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
 
         // Inicializar semana
-        ArrayList<Integer> datosObras = new ArrayList<>();
+        ArrayList<Integer> datosObras = new ArrayList<Integer>(Collections.nCopies(7, 0));
+        ArrayList datos = new ArrayList<>();
         if (obras != null) {
-            for (int i = 1; i <= 7; i++) {
+            // Sacar lo necesario de todas las obras estudiadas
+            /*for (int i = 0; i < 7; i++) {
                 int estudiadoDia = 0;
 
                 for (int j = 0; j < obras.length; j++) {
@@ -79,12 +82,18 @@ public class DashboardFragment extends Fragment {
                 }
 
                 datosObras.add(estudiadoDia);
-            }
-        }
+            }*/
 
-        ArrayList datos = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            datos.add(new BarEntry(i, datosObras.get(i)));
+            for (int i = 0; i < obras.length; i++) {
+                for (int j = 0; j < 7; j++) {
+                    datosObras.set(j, datosObras.get(j) + obras[i].getEstudio(j));
+                }
+            }
+
+            // Añadir datos para la gráfica
+            for (int i = 0; i < 7; i++) {
+                datos.add(new BarEntry(i, datosObras.get(i)));
+            }
         }
 
         barDataSet = new BarDataSet(datos, "Segundos estudiados");
@@ -99,11 +108,9 @@ public class DashboardFragment extends Fragment {
         xAxis.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(semanaEjeX));
         xAxis.setPosition(XAxis.XAxisPosition.TOP);
         xAxis.setGranularity(1f);
-        //xAxis.setCenterAxisLabels(true);
         xAxis.setGranularityEnabled(true);
         xAxis.setEnabled(true);
         xAxis.setDrawGridLines(false);
-        //xAxis.setAvoidFirstLastClipping(true);
 
         barChart.setData(barData);
 
