@@ -45,7 +45,7 @@ public class DashboardFragment extends Fragment {
     private LineData lineData;
     private LineDataSet lineDataSet;
 
-    private ArrayList<String> semanaEjeX = new ArrayList<>(Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"));
+    private ArrayList<String> semanaEjeX = new ArrayList<>(Arrays.asList("L", "M", "X", "J", "V", "S", "D"));
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,36 +65,45 @@ public class DashboardFragment extends Fragment {
 
     private void actualizarGraficas(View view) {
         Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
-        // Inicializar semana
-        ArrayList datos = new ArrayList<>();
-        for (int i = 1; i <= 7; i++) {
-            datos.add(new BarEntry(i, 0));
-        }
 
+        // Inicializar semana
+        ArrayList<Integer> datosObras = new ArrayList<>();
         if (obras != null) {
-            for (int i = 0; i < obras.length; i++) {
-                if (obras[i].getTiempoEstudiado() > 0) {
-                    datos.add(new BarEntry(obras[i].getUltimoEstudio(), obras[i].getTiempoEstudiado()));
+            for (int i = 1; i <= 7; i++) {
+                int estudiadoDia = 0;
+
+                for (int j = 0; j < obras.length; j++) {
+                    if (obras[j].getTiempoEstudiado() > 0 && obras[j].getUltimoEstudio() == i) {
+                        estudiadoDia += obras[j].getTiempoEstudiado();
+                    }
                 }
+
+                datosObras.add(estudiadoDia);
             }
         }
+
+        ArrayList datos = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            datos.add(new BarEntry(i, datosObras.get(i)));
+        }
+
         barDataSet = new BarDataSet(datos, "Segundos estudiados");
         barData = new BarData(barDataSet);
 
-        Description desc = new Description();
-        desc.setText("Balance semanal");
         barChart = view.findViewById(R.id.graficaSemanal);
-        barChart.setDescription(desc);
-        barChart.getDescription().setEnabled(true);
-
+        barChart.setExtraBottomOffset(100f);
+        barChart.getDescription().setEnabled(false);
         XAxis xAxis = barChart.getXAxis();
+        xAxis.setAxisMinimum(0);
+        xAxis.setAxisMaximum(6);
+        xAxis.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(semanaEjeX));
+        xAxis.setPosition(XAxis.XAxisPosition.TOP);
         xAxis.setGranularity(1f);
-        xAxis.setCenterAxisLabels(true);
+        //xAxis.setCenterAxisLabels(true);
+        xAxis.setGranularityEnabled(true);
         xAxis.setEnabled(true);
         xAxis.setDrawGridLines(false);
-        xAxis.setAvoidFirstLastClipping(true);
-        //String setter in x-Axis
-        barChart.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(semanaEjeX));
+        //xAxis.setAvoidFirstLastClipping(true);
 
         barChart.setData(barData);
 

@@ -141,6 +141,8 @@ public class ObraDetalleFragment extends Fragment {
                     int dia = t.get(Calendar.DAY_OF_WEEK);
                     if (dia == 1) {
                         dia = 7;
+                    } else {
+                        dia -= 1;
                     }
                     obras[i].setUltimoEstudio(dia);
                 }
