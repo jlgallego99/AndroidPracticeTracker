@@ -3,6 +3,7 @@ package com.example.androidpracticetracker.ui.dashboard;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.androidpracticetracker.R;
 import com.example.androidpracticetracker.databinding.FragmentDashboardBinding;
@@ -29,6 +32,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +53,9 @@ public class DashboardFragment extends Fragment {
     private LineDataSet lineDataSet;
 
     private TextView textoHorasTotal;
+    private TextView textoUltimaObra;
+
+    private CardView cardUltimaObra;
 
     private ArrayList<String> semanaEjeX = new ArrayList<>(Arrays.asList("L", "M", "X", "J", "V", "S", "D"));
 
@@ -62,7 +70,21 @@ public class DashboardFragment extends Fragment {
         int horas = (int) total / 3600;
         int minutos = (int) (total % 3600) / 60;
         int segundos = (int) total % 60;
-        textoHorasTotal.setText("Total estudiado esta semana: " + horas + "h " + minutos + "m " + segundos + "s ");
+        textoHorasTotal.setText(horas + "h " + minutos + "m " + segundos + "s ");
+
+        textoUltimaObra = root.findViewById(R.id.textoUltimaObra);
+        Obra[] ultimaObra = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
+        textoUltimaObra.setText(ultimaObra[0].getNombre() + " - " + ultimaObra[0].getAutor());
+
+        cardUltimaObra = root.findViewById(R.id.cardUltimaObra);
+        cardUltimaObra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("obra", ultimaObra[0]);
+                Navigation.findNavController(v).navigate(R.id.action_navigation_dashboard_to_obraDetalleFragment, bundle);
+            }
+        });
 
         return root;
     }

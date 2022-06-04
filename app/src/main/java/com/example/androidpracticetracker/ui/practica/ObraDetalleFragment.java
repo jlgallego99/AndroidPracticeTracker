@@ -32,6 +32,7 @@ public class ObraDetalleFragment extends Fragment {
     private boolean stopped;    // Indica si el cronómetro está parado o no
     private long offset;        // Tiempo que lleva parado el cronómetro
 
+    private Obra o;
     private TextView textoAutor, textoNombre, textoHorasObras;
     private FragmentObraDetalleBinding binding;
     private SharedPreferences sharedPreferences;
@@ -45,6 +46,7 @@ public class ObraDetalleFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        o = getArguments().getParcelable("obra");
     }
 
     @Override
@@ -59,6 +61,7 @@ public class ObraDetalleFragment extends Fragment {
         Button startButton = root.findViewById(R.id.startChronometer);
         Button stopButton = root.findViewById(R.id.stopChronometer);
         simpleChronometer = root.findViewById(R.id.simpleChronometer);
+        textoHorasObras = root.findViewById(R.id.textoHorasObra);
 
         // Por defecto el cronómetro está parado hasta que se inicie a contar
         // Necesita una base de tiempo de la que partir
@@ -112,6 +115,8 @@ public class ObraDetalleFragment extends Fragment {
 
                     Toast.makeText(getContext(), "Nuevo estudio: " + offset/1000 + " segundos", Toast.LENGTH_SHORT).show();
 
+                    actualizarTiempoEstudio();
+
                     // Reiniciar cronómetro
                     simpleChronometer.setBase(SystemClock.elapsedRealtime());
                     offset = 0;
@@ -119,20 +124,21 @@ public class ObraDetalleFragment extends Fragment {
             }
         });
 
-        Obra o = getArguments().getParcelable("obra");
         textoAutor = root.findViewById(R.id.textoAutor);
         textoNombre = root.findViewById(R.id.textoNombre);
         textoAutor.setText(o.getAutor());
         textoNombre.setText(o.getNombre());
+        actualizarTiempoEstudio();
 
-        textoHorasObras = root.findViewById(R.id.textoHorasObra);
+        return root;
+    }
+
+    private void actualizarTiempoEstudio() {
         float total = o.getTiempoEstudiado();
         int horas = (int) total / 3600;
         int minutos = (int) (total % 3600) / 60;
         int segundos = (int) total % 60;
         textoHorasObras.setText("Tiempo de estudio total: " + horas + "h " + minutos + "m " + segundos + "s");
-
-        return root;
     }
 
     private void guardarTiempoEstudio(Calendar t) {
@@ -150,6 +156,9 @@ public class ObraDetalleFragment extends Fragment {
                     }
 
                     obras[i].addEstudio(dia, (int) (offset/1000));
+
+                    // Marcar esta obra como la última estudiada
+                    editorObras.putString("UltimaObra", gson.toJson(obras[i]));
                 }
             }
 
