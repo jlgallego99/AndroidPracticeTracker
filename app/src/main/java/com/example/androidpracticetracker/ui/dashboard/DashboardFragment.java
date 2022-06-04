@@ -47,6 +47,8 @@ public class DashboardFragment extends Fragment {
     private LineData lineData;
     private LineDataSet lineDataSet;
 
+    private TextView textoHorasTotal;
+
     private ArrayList<String> semanaEjeX = new ArrayList<>(Arrays.asList("L", "M", "X", "J", "V", "S", "D"));
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,6 +56,13 @@ public class DashboardFragment extends Fragment {
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        textoHorasTotal = root.findViewById(R.id.textoHorasTotal);
+        float total = totalSemanal();
+        int horas = (int) total / 3600;
+        int minutos = (int) (total % 3600) / 60;
+        int segundos = (int) total % 60;
+        textoHorasTotal.setText("Total estudiado esta semana: " + horas + "h " + minutos + "m " + segundos + "s ");
 
         return root;
     }
@@ -89,7 +98,7 @@ public class DashboardFragment extends Fragment {
         barData = new BarData(barDataSet);
 
         barChart = view.findViewById(R.id.graficaSemanal);
-        barChart.setExtraBottomOffset(100f);
+        barChart.getLegend().setEnabled(false);
         barChart.getDescription().setEnabled(false);
         XAxis xAxis = barChart.getXAxis();
         xAxis.setAxisMinimum(0);
@@ -105,6 +114,17 @@ public class DashboardFragment extends Fragment {
 
         barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         barDataSet.setValueTextColor(Color.BLACK);
+    }
+
+    protected float totalSemanal() {
+        float total = 0f;
+        Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
+
+        for (int i = 0; i < obras.length; i++) {
+            total += obras[i].getTiempoEstudiado();
+        }
+
+        return total;
     }
 
     @Override

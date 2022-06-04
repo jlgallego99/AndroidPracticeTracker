@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Pepe/Desktop/AndroidPracticeTracker/app/src/main/res/layout/fragment_dashboard.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/Pepe/Desktop/AndroidPracticeTracker/app/src/main/res/layout/fragment_obra_detalle.xml" value="0.22826086956521738" />
         <entry key="app/src/main/res/drawable-v24/timer.xml" value="0.3075" />
         <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2975" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3075" />
