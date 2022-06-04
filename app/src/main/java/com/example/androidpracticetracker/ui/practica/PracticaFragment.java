@@ -48,7 +48,7 @@ public class PracticaFragment extends ListFragment {
             }
         });
 
-        adapter = new ObraArrayAdapter(root.getContext().getApplicationContext(), R.layout.item_lista);
+        adapter = new ObraArrayAdapter(root.getContext().getApplicationContext(), R.layout.item_lista, sharedPreferences);
         crearListaObras();
 
         return root;

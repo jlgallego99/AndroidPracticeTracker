@@ -1,8 +1,10 @@
 package com.example.androidpracticetracker.ui.practica;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.androidpracticetracker.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 public class ObraArrayAdapter extends ArrayAdapter<Obra> {
-    private static final String TAG = "ObraArrayAdapter";
     private ArrayList<Obra> obras = new ArrayList<>();
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editorObras;
+    private Gson gson = new Gson();
 
     static class ObraViewHolder {
         TextView nombre;
@@ -28,8 +33,10 @@ public class ObraArrayAdapter extends ArrayAdapter<Obra> {
         //ImageView borrar;
     }
 
-    public ObraArrayAdapter(@NonNull Context context, int resource) {
+    public ObraArrayAdapter(@NonNull Context context, int resource, SharedPreferences sharedPreferences) {
         super(context, resource);
+        this.sharedPreferences = sharedPreferences;
+        editorObras = sharedPreferences.edit();
     }
 
     @Override
@@ -64,8 +71,10 @@ public class ObraArrayAdapter extends ArrayAdapter<Obra> {
         }
 
         Obra o = getItem(position);
-        viewHolder.nombre.setText(o.getNombre());
-        viewHolder.etiquetas.setText(o.getEtiquetas());
+        if (o != null) {
+            viewHolder.nombre.setText(o.getNombre());
+            viewHolder.etiquetas.setText(o.getEtiquetas());
+        }
 
         // Controlar botón ed borrar obra
         ImageButton boton_borrar = row.findViewById(R.id.imageButton);
@@ -73,6 +82,17 @@ public class ObraArrayAdapter extends ArrayAdapter<Obra> {
         boton_borrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Obra[] obs = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
+                Obra[] nuevas_obras = new Obra[obs.length - 1];
+                for (int i = 0; i < obs.length; i++) {
+                    if (i != position) {
+                        nuevas_obras[i] = obs[i];
+                    }
+                }
+
+                editorObras.putString("Obras", gson.toJson(nuevas_obras));
+                editorObras.apply();
+
                 obras.remove(position);
                 notifyDataSetChanged();
             }

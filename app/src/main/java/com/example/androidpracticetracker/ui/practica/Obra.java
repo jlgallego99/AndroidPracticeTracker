@@ -20,7 +20,6 @@ public class Obra implements Parcelable {
         this.etiquetas = etiquetas;
         this.tiempoEstudiado = 0;
         this.ultimoEstudio = 0;
-        System.out.println("CREANDO OBRA");
     }
 
     protected Obra(Parcel in) {
