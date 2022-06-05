@@ -1,6 +1,7 @@
 package com.example.androidpracticetracker.ui.dashboard;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -9,10 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,7 +28,9 @@ import com.example.androidpracticetracker.ui.practica.Obra;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -42,6 +48,7 @@ import java.util.Collections;
 public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editorObras;
     private Gson gson = new Gson();
 
     private BarChart barChart;
@@ -54,14 +61,17 @@ public class DashboardFragment extends Fragment {
 
     private TextView textoHorasTotal;
     private TextView textoUltimaObra;
+    private TextView textoObjetivo;
 
     private CardView cardUltimaObra;
+    private CardView cardObjetivoDiario;
 
     private ArrayList<String> semanaEjeX = new ArrayList<>(Arrays.asList("L", "M", "X", "J", "V", "S", "D"));
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        editorObras = sharedPreferences.edit();
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -74,7 +84,14 @@ public class DashboardFragment extends Fragment {
 
         textoUltimaObra = root.findViewById(R.id.textoUltimaObra);
         Obra ultimaObra = gson.fromJson(sharedPreferences.getString("UltimaObra", ""), Obra.class);
-        textoUltimaObra.setText(ultimaObra.getNombre() + " - " + ultimaObra.getAutor());
+        if (ultimaObra != null) {
+            textoUltimaObra.setText(ultimaObra.getNombre() + " - " + ultimaObra.getAutor());
+        }
+
+        textoObjetivo = root.findViewById(R.id.textoObjetivo);
+        textoObjetivo.setText("Objetivo diario: " + sharedPreferences.getString("Objetivo", ""));
+
+        actualizarGraficas(root);
 
         cardUltimaObra = root.findViewById(R.id.cardUltimaObra);
         cardUltimaObra.setOnClickListener(new View.OnClickListener() {
@@ -86,14 +103,48 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        cardObjetivoDiario = root.findViewById(R.id.cardObjetivoDiario);
+        cardObjetivoDiario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = getLayoutInflater().inflate(R.layout.dialog_objetivo, null);
+                AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
+                alertDialog.setTitle("Cambiar objetivo diario");
+                alertDialog.setCancelable(false);
+
+                final EditText editObjetivo = (EditText) view.findViewById(R.id.editarObjetivo);
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String nuevoObjetivo = editObjetivo.getText().toString();
+
+                        if (nuevoObjetivo.isEmpty()) {
+                            alertDialog.dismiss();
+                            Toast.makeText(getContext(), "No se ha cambiado el objetivo", Toast.LENGTH_SHORT).show();
+                        } else {
+                            editorObras.putString("Objetivo", nuevoObjetivo);
+                            editorObras.apply();
+                            Toast.makeText(getContext(), "Nuevo objetivo: " + nuevoObjetivo + " minutos", Toast.LENGTH_SHORT).show();
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog.setView(view);
+                alertDialog.show();
+            }
+        });
+
         return root;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        actualizarGraficas(view);
     }
 
     private void actualizarGraficas(View view) {
@@ -132,8 +183,15 @@ public class DashboardFragment extends Fragment {
         xAxis.setEnabled(true);
         xAxis.setDrawGridLines(false);
 
-        barChart.setData(barData);
+        // Poner objetivo diario
+        LimitLine objetivoDiario = new LimitLine(Float.parseFloat(sharedPreferences.getString("Objetivo", "0")));
+        objetivoDiario.setLineColor(Color.GREEN);
+        objetivoDiario.setLineWidth(1f);
+        YAxis leftAxis = barChart.getAxisLeft();
+        leftAxis.removeAllLimitLines();
+        leftAxis.addLimitLine(objetivoDiario);
 
+        barChart.setData(barData);
         barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         barDataSet.setValueTextColor(Color.BLACK);
     }
@@ -142,8 +200,10 @@ public class DashboardFragment extends Fragment {
         float total = 0f;
         Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
 
-        for (int i = 0; i < obras.length; i++) {
-            total += obras[i].getTiempoEstudiado();
+        if (obras != null) {
+            for (int i = 0; i < obras.length; i++) {
+                total += obras[i].getTiempoEstudiado();
+            }
         }
 
         return total;
