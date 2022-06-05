@@ -123,8 +123,8 @@ public class DashboardFragment extends Fragment {
         barChart.getLegend().setEnabled(false);
         barChart.getDescription().setEnabled(false);
         XAxis xAxis = barChart.getXAxis();
-        xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(6);
+        xAxis.setAxisMinimum(-1);
+        xAxis.setAxisMaximum(7);
         xAxis.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(semanaEjeX));
         xAxis.setPosition(XAxis.XAxisPosition.TOP);
         xAxis.setGranularity(1f);
