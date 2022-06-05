@@ -73,15 +73,15 @@ public class DashboardFragment extends Fragment {
         textoHorasTotal.setText(horas + "h " + minutos + "m " + segundos + "s ");
 
         textoUltimaObra = root.findViewById(R.id.textoUltimaObra);
-        Obra[] ultimaObra = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
-        textoUltimaObra.setText(ultimaObra[0].getNombre() + " - " + ultimaObra[0].getAutor());
+        Obra ultimaObra = gson.fromJson(sharedPreferences.getString("UltimaObra", ""), Obra.class);
+        textoUltimaObra.setText(ultimaObra.getNombre() + " - " + ultimaObra.getAutor());
 
         cardUltimaObra = root.findViewById(R.id.cardUltimaObra);
         cardUltimaObra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("obra", ultimaObra[0]);
+                bundle.putParcelable("obra", ultimaObra);
                 Navigation.findNavController(v).navigate(R.id.action_navigation_dashboard_to_obraDetalleFragment, bundle);
             }
         });
