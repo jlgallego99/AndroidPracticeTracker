@@ -82,6 +82,7 @@ public class DashboardFragment extends Fragment {
             if (!sharedPreferences.getBoolean("NuevaSemana", false)) {
                 editorObras.putBoolean("NuevaSemana", true);
                 editorObras.putBoolean("Reiniciado", true);
+                editorObras.apply();
                 reiniciarSemana();
             }
         }
@@ -89,6 +90,7 @@ public class DashboardFragment extends Fragment {
         // Si ya ha empezado la nueva semana (es martes), se desactiva el flag de nuevasemana
         if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY) {
             editorObras.putBoolean("NuevaSemana", false);
+            editorObras.apply();
         }
 
         textoHorasTotal = root.findViewById(R.id.textoHorasTotal);

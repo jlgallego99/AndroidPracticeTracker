@@ -56,7 +56,9 @@ public class PracticaFragment extends ListFragment {
 
         // Si es lunes, reiniciar la semana
         if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY && !sharedPreferences.getBoolean("Reiniciado", false)) {
-            reiniciarSemana();
+            if (!sharedPreferences.getBoolean("NuevaSemana", false)) {
+                reiniciarSemana();
+            }
         }
 
         return root;
