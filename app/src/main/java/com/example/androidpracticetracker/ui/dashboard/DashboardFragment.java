@@ -43,6 +43,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 
 public class DashboardFragment extends Fragment {
@@ -74,6 +75,21 @@ public class DashboardFragment extends Fragment {
         editorObras = sharedPreferences.edit();
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        // Si es lunes, y es nueva semana, reiniciar la semana
+        if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY && !sharedPreferences.getBoolean("Reiniciado", false)) {
+            // Si vuelve a ser lunes, es nueva semana
+            if (!sharedPreferences.getBoolean("NuevaSemana", false)) {
+                editorObras.putBoolean("NuevaSemana", true);
+                editorObras.putBoolean("Reiniciado", true);
+                reiniciarSemana();
+            }
+        }
+
+        // Si ya ha empezado la nueva semana (es martes), se desactiva el flag de nuevasemana
+        if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY) {
+            editorObras.putBoolean("NuevaSemana", false);
+        }
 
         textoHorasTotal = root.findViewById(R.id.textoHorasTotal);
         float total = totalSemanal();
@@ -196,13 +212,20 @@ public class DashboardFragment extends Fragment {
         barDataSet.setValueTextColor(Color.BLACK);
     }
 
+    private void reiniciarSemana() {
+        editorObras.putString("UltimaObra", "");
+        editorObras.apply();
+    }
+
     protected float totalSemanal() {
         float total = 0f;
         Obra[] obras = gson.fromJson(sharedPreferences.getString("Obras", ""), Obra[].class);
 
         if (obras != null) {
             for (int i = 0; i < obras.length; i++) {
-                total += obras[i].getTiempoEstudiado();
+                for (int j = 0; j < 7; j++) {
+                    total += obras[i].getEstudio(j);
+                }
             }
         }
 

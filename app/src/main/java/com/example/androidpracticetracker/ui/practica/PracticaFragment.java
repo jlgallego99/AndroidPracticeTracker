@@ -24,12 +24,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class PracticaFragment extends ListFragment {
 
     private FragmentPracticaBinding binding;
     private ObraArrayAdapter adapter;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editorObras;
     private Obra[] obras;
     Gson gson = new Gson();
 
@@ -37,6 +39,7 @@ public class PracticaFragment extends ListFragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        editorObras = sharedPreferences.edit();
         binding = FragmentPracticaBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -50,6 +53,11 @@ public class PracticaFragment extends ListFragment {
 
         adapter = new ObraArrayAdapter(root.getContext().getApplicationContext(), R.layout.item_lista, sharedPreferences);
         crearListaObras();
+
+        // Si es lunes, reiniciar la semana
+        if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY && !sharedPreferences.getBoolean("Reiniciado", false)) {
+            reiniciarSemana();
+        }
 
         return root;
     }
@@ -79,6 +87,15 @@ public class PracticaFragment extends ListFragment {
             setListAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void reiniciarSemana() {
+        for (int i = 0; i < obras.length; i++) {
+            obras[i].reiniciarEstudioSemanal();
+        }
+
+        editorObras.putString("Obras", gson.toJson(obras));
+        editorObras.apply();
     }
 
     @Override

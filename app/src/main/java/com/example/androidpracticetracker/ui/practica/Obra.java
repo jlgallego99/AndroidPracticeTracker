@@ -100,6 +100,11 @@ public class Obra implements Parcelable {
         return this.estudios.get(dia);
     }
 
+    public void reiniciarEstudioSemanal() {
+        this.estudios = new ArrayList<Integer>(Collections.nCopies(7, 0));
+        System.out.println(this.estudios);
+    }
+
     @Override
     public int describeContents() {
         return 0;
